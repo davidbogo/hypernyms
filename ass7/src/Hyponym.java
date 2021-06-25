@@ -1,10 +1,10 @@
 import java.lang.Comparable;
 
-public class HyponymInfo implements Comparable<HyponymInfo> {
+public class Hyponym implements Comparable<Hyponym> {
     private String      hyponym;
     private int         numOccurences;
 
-    public HyponymInfo(String name) {
+    public Hyponym(String name) {
         hyponym = name.toLowerCase();
         numOccurences = 1;
     }
@@ -21,7 +21,7 @@ public class HyponymInfo implements Comparable<HyponymInfo> {
         numOccurences += num;
     }
 
-    public int compareTo(HyponymInfo other) {
+    public int compareTo(Hyponym other) {
         return hyponym.compareToIgnoreCase(other.hyponym);
     }
 }

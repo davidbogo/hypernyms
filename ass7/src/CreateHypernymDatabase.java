@@ -9,51 +9,51 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class CreateHypernymDatabase {
-    private static List<HypernymInfo>   hypernyms;
+    private static List<Hypernym>   hypernyms;
     private static SentenceProcessor    sentenceProcessor;
 
     public static void main(String[] args) {
         if (args.length == 2) {
-            hypernyms = new ArrayList<HypernymInfo>();
+            hypernyms = new ArrayList<Hypernym>();
             sentenceProcessor = new SentenceProcessor();
             if (readCorpus(args[0])) {
 
 //======================================================================================
-                HypernymInfo curHypernym = new HypernymInfo("Transport");
-                curHypernym.registerHyponym(new HyponymInfo("Car"));
-                curHypernym.registerHyponym(new HyponymInfo("Car"));
-                curHypernym.registerHyponym(new HyponymInfo("Bicycle"));
-                curHypernym.registerHyponym(new HyponymInfo("Bicycle"));
-                curHypernym.registerHyponym(new HyponymInfo("Bicycle"));
-                curHypernym.registerHyponym(new HyponymInfo("Train"));
+                Hypernym curHypernym = new Hypernym("Transport");
+                curHypernym.registerHyponym(new Hyponym("Car"));
+                curHypernym.registerHyponym(new Hyponym("Car"));
+                curHypernym.registerHyponym(new Hyponym("Bicycle"));
+                curHypernym.registerHyponym(new Hyponym("Bicycle"));
+                curHypernym.registerHyponym(new Hyponym("Bicycle"));
+                curHypernym.registerHyponym(new Hyponym("Train"));
                 registerHypernym(curHypernym);
 
-                curHypernym = new HypernymInfo("Animal");
-                curHypernym.registerHyponym(new HyponymInfo("Cat"));
-                curHypernym.registerHyponym(new HyponymInfo("dog"));
-                curHypernym.registerHyponym(new HyponymInfo("mouse"));
-                curHypernym.registerHyponym(new HyponymInfo("Butterfly"));
+                curHypernym = new Hypernym("Animal");
+                curHypernym.registerHyponym(new Hyponym("Cat"));
+                curHypernym.registerHyponym(new Hyponym("dog"));
+                curHypernym.registerHyponym(new Hyponym("mouse"));
+                curHypernym.registerHyponym(new Hyponym("Butterfly"));
                 registerHypernym(curHypernym);
 
-                curHypernym = new HypernymInfo("Transport");
-                curHypernym.registerHyponym(new HyponymInfo("Jetfoil"));
-                curHypernym.registerHyponym(new HyponymInfo("Bicycle"));
-                curHypernym.registerHyponym(new HyponymInfo("Bicycle"));
-                curHypernym.registerHyponym(new HyponymInfo("Train"));
-                curHypernym.registerHyponym(new HyponymInfo("Jetfoil"));
+                curHypernym = new Hypernym("Transport");
+                curHypernym.registerHyponym(new Hyponym("Jetfoil"));
+                curHypernym.registerHyponym(new Hyponym("Bicycle"));
+                curHypernym.registerHyponym(new Hyponym("Bicycle"));
+                curHypernym.registerHyponym(new Hyponym("Train"));
+                curHypernym.registerHyponym(new Hyponym("Jetfoil"));
                 registerHypernym(curHypernym);
 
-                curHypernym = new HypernymInfo("Animal");
-                curHypernym.registerHyponym(new HyponymInfo("Cat"));
-                curHypernym.registerHyponym(new HyponymInfo("Cat"));
-                curHypernym.registerHyponym(new HyponymInfo("Cat"));
-                curHypernym.registerHyponym(new HyponymInfo("Cat"));
-                curHypernym.registerHyponym(new HyponymInfo("Cat"));
-                curHypernym.registerHyponym(new HyponymInfo("dog"));
-                curHypernym.registerHyponym(new HyponymInfo("mouse"));
-                curHypernym.registerHyponym(new HyponymInfo("Butterfly"));
-                curHypernym.registerHyponym(new HyponymInfo("Dog"));
-                curHypernym.registerHyponym(new HyponymInfo("Fox"));
+                curHypernym = new Hypernym("Animal");
+                curHypernym.registerHyponym(new Hyponym("Cat"));
+                curHypernym.registerHyponym(new Hyponym("Cat"));
+                curHypernym.registerHyponym(new Hyponym("Cat"));
+                curHypernym.registerHyponym(new Hyponym("Cat"));
+                curHypernym.registerHyponym(new Hyponym("Cat"));
+                curHypernym.registerHyponym(new Hyponym("dog"));
+                curHypernym.registerHyponym(new Hyponym("mouse"));
+                curHypernym.registerHyponym(new Hyponym("Butterfly"));
+                curHypernym.registerHyponym(new Hyponym("Dog"));
+                curHypernym.registerHyponym(new Hyponym("Fox"));
                 registerHypernym(curHypernym);
 
 //======================================================================================
@@ -65,13 +65,13 @@ public class CreateHypernymDatabase {
         }
     }
 
-    private static void registerHypernym(HypernymInfo newHypernym) {
+    private static void registerHypernym(Hypernym newHypernym) {
         int index = Collections.binarySearch(hypernyms, newHypernym);
         if (index >= 0) {
             // A hypernym with this name already exists. We'll just add the new hyponyms to it
-            HypernymInfo existingHypernym = hypernyms.get(index);
-            List<HyponymInfo> newHyponymList = newHypernym.getHyponymList();
-            for (HyponymInfo hyponym : newHyponymList) {
+            Hypernym existingHypernym = hypernyms.get(index);
+            List<Hyponym> newHyponymList = newHypernym.getHyponymList();
+            for (Hyponym hyponym : newHyponymList) {
                 existingHypernym.registerHyponym(hyponym);
             }
         } else {
@@ -81,7 +81,7 @@ public class CreateHypernymDatabase {
     }
 
     private static void readSingleCorpusFile(BufferedReader bufReader) throws Exception {
-        HypernymInfo hypernym;
+        Hypernym hypernym;
         Pattern pattern = Pattern.compile("\\.");
         String line;
         while ((line = bufReader.readLine()) != null) {
@@ -130,7 +130,7 @@ public class CreateHypernymDatabase {
         boolean success = true;
         try {
             BufferedWriter bufWriter = new BufferedWriter(new FileWriter(databasePath));
-            for (HypernymInfo hypernym: hypernyms) {
+            for (Hypernym hypernym: hypernyms) {
                 if (hypernym.getNumberOfHyponyms() >= minHyponyms) {
                     hypernym.writeToFile(bufWriter);
                 }

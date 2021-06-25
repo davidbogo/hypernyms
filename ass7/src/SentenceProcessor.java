@@ -1,6 +1,6 @@
 public class SentenceProcessor {
-    public HypernymInfo process(String sentence) {
-        HypernymInfo hypernym = null;
+    public Hypernym process(String sentence) {
+        Hypernym hypernym = null;
         return hypernym;
     }
 }
