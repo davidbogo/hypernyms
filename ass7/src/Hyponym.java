@@ -1,8 +1,8 @@
 import java.lang.Comparable;
 
 public class Hyponym implements Comparable<Hyponym> {
-    private String      hyponym;
-    private int         numOccurences;
+    private String hyponym;
+    private int numOccurences;
 
     public Hyponym(String name) {
         hyponym = name.toLowerCase();

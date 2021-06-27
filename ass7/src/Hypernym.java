@@ -6,8 +6,8 @@ import java.util.List;
 import java.lang.Comparable;
 
 public class Hypernym implements Comparable<Hypernym> {
-    private String      hypernym;
-    List<Hyponym>   hyponyms;
+    private String hypernym;
+    private List<Hyponym> hyponyms;
 
     public Hypernym(String name) {
         hypernym = name.toLowerCase();
