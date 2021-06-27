@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -73,7 +74,7 @@ public class HypernymDatabaseManager {
                     fullFileName += "\\";
                 }
                 fullFileName += fileName;
-                System.out.println("Processing corpus file: " + fullFileName);
+                // System.out.println("Processing corpus file: " + fullFileName);
                 readSingleCorpusFile(new BufferedReader(new FileReader(fullFileName)));
             }
         } catch (Exception except) {
@@ -88,7 +89,7 @@ public class HypernymDatabaseManager {
         boolean success = true;
         try {
             BufferedWriter bufWriter = new BufferedWriter(new FileWriter(databasePath));
-            for (Hypernym hypernym: hypernyms) {
+            for (Hypernym hypernym : hypernyms) {
                 if (hypernym.getNumberOfHyponyms() >= minHyponyms) {
                     hypernym.writeToFile(bufWriter);
                 }
@@ -103,5 +104,23 @@ public class HypernymDatabaseManager {
     }
 
     public void printoutMatchingHypernyms(String lemma) {
+        List<ExtendedHypernym> hypernymsSortedByOccurrences = new ArrayList<ExtendedHypernym>();
+        for (Hypernym hypernym : hypernyms) {
+            Hyponym matchingHyponym = hypernym.findHyponym(lemma);
+            if (matchingHyponym != null) {
+                hypernymsSortedByOccurrences.add(new ExtendedHypernym(hypernym, matchingHyponym.getNumOfOccurrences()));
+            }
+        }
+        if (hypernymsSortedByOccurrences.size() > 0) {
+            Collections.sort(hypernymsSortedByOccurrences);
+            for (ExtendedHypernym extendedHypernym : hypernymsSortedByOccurrences) {
+                System.out.println(extendedHypernym.name() +
+                        ": (" +
+                        Integer.toString(extendedHypernym.getNumberOfOccurrences()) +
+                        ")");
+            }
+        } else {
+            System.out.println("The lemma doesn't appear in the corpus");
+        }
     }
 }

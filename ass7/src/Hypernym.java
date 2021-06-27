@@ -42,10 +42,16 @@ public class Hypernym implements Comparable<Hypernym> {
         }
     }
 
+    public Hyponym findHyponym(String hyponymName) {
+        int index = Collections.binarySearch(hyponyms, new Hyponym(hyponymName));
+        if (index >= 0) {
+            return hyponyms.get(index);
+        }
+        return null;
+    }
+
     public void writeToFile(BufferedWriter writer) throws Exception {
         String outputStr = hypernym;
-        Collections.sort(hyponyms);
-
         Collections.sort(hyponyms, new Comparator<Hyponym>(){
             public int compare(Hyponym h1, Hyponym h2) {
                 // We need the hyponyms to be sorted in reverse order, from the highest
