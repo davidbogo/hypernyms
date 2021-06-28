@@ -1,5 +1,7 @@
 <project default="compile">
 
+    <property name="classpath" value="bin" />
+
     <!-- Compile all java files under `src`, and export .class files into `bin` -->
     <target name="compile">
         <mkdir dir="bin"/>
