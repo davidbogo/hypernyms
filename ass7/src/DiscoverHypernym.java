@@ -1,4 +1,12 @@
+/**
+ * The type Discover hypernym.
+ */
 public class DiscoverHypernym {
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         if (args.length == 2) {
             HypernymDatabaseManager hypernymDatabaseManager = new HypernymDatabaseManager();

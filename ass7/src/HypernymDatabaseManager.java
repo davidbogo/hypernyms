@@ -5,19 +5,29 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * The type Hypernym database manager.
+ */
 public class HypernymDatabaseManager {
     private List<Hypernym>       hypernyms;
     private SentenceProcessor    sentenceProcessor;
 
+    /**
+     * Instantiates a new Hypernym database manager.
+     */
     public HypernymDatabaseManager() {
         hypernyms = new ArrayList<Hypernym>();
         sentenceProcessor = new SentenceProcessor();
     }
 
+    /**
+     * Register a hypernym.
+     *
+     * @param newHypernym hypernym to register
+     */
     private void registerHypernym(Hypernym newHypernym) {
         int index = Collections.binarySearch(hypernyms, newHypernym);
         if (index >= 0) {
@@ -33,24 +43,35 @@ public class HypernymDatabaseManager {
         }
     }
 
+    /**
+     * Register multiple hypernyms.
+     *
+     * @param newHypernyms list of hypernyms to register
+     */
     private void registerHypernyms(List<Hypernym> newHypernyms) {
         for (Hypernym hypernym : newHypernyms) {
             registerHypernym(hypernym);
         }
     }
 
+    /**
+     * Read a single file from the corpus.
+     *
+     * @param bufReader the buffered reader
+     * @throws Exception if something goes wrong
+     */
     private void readSingleCorpusFile(BufferedReader bufReader) throws Exception {
         Pattern pattern = Pattern.compile("\\.");
         String line;
         while ((line = bufReader.readLine()) != null) {
             if (line.length() > 1) {
-                List<Hypernym> hypernyms;
+                List<Hypernym> tempHypernyms;
                 if (line.contains(".")) {
                     String[] sentenceArray = pattern.split(line);
                     for (String sentence : sentenceArray) {
-                        hypernyms = sentenceProcessor.process(sentence);
-                        if (hypernyms != null) {
-                            registerHypernyms(hypernyms);
+                        tempHypernyms = sentenceProcessor.process(sentence);
+                        if (tempHypernyms != null) {
+                            registerHypernyms(tempHypernyms);
                         }
                     }
                 } else {
@@ -63,6 +84,12 @@ public class HypernymDatabaseManager {
         }
     }
 
+    /**
+     * Read the corpus.
+     *
+     * @param corpusDir the corpus directory
+     * @return true if successful, false otherwise
+     */
     public boolean readCorpus(String corpusDir)  {
         boolean success = true;
         try {
@@ -70,7 +97,7 @@ public class HypernymDatabaseManager {
             String[] fileNames = dir.list();
             for (String fileName : fileNames) {
                 String fullFileName = corpusDir;
-                if (fullFileName.charAt(fullFileName.length() - 1) != '\\'){
+                if (fullFileName.charAt(fullFileName.length() - 1) != '\\') {
                     fullFileName += "\\";
                 }
                 fullFileName += fileName;
@@ -85,6 +112,13 @@ public class HypernymDatabaseManager {
         return success;
     }
 
+    /**
+     * Save the database to a file.
+     *
+     * @param databasePath the database file path
+     * @param minHyponyms min required number of hyponyms. If a hypernym has less hyponyms, it's skipped
+     * @return true if successful, false otherwise
+     */
     public boolean saveDatabase(String databasePath, int minHyponyms) {
         boolean success = true;
         try {
@@ -103,6 +137,11 @@ public class HypernymDatabaseManager {
         return success;
     }
 
+    /**
+     * Printout matching hypernyms.
+     *
+     * @param lemma the lemma to look for in hypernyms
+     */
     public void printoutMatchingHypernyms(String lemma) {
         List<ExtendedHypernym> hypernymsSortedByOccurrences = new ArrayList<ExtendedHypernym>();
         for (Hypernym hypernym : hypernyms) {
@@ -114,10 +153,10 @@ public class HypernymDatabaseManager {
         if (hypernymsSortedByOccurrences.size() > 0) {
             Collections.sort(hypernymsSortedByOccurrences);
             for (ExtendedHypernym extendedHypernym : hypernymsSortedByOccurrences) {
-                System.out.println(extendedHypernym.name() +
-                        ": (" +
-                        Integer.toString(extendedHypernym.getNumberOfOccurrences()) +
-                        ")");
+                System.out.println(extendedHypernym.name()
+                        + ": ("
+                        + Integer.toString(extendedHypernym.getNumberOfOccurrences())
+                        + ")");
             }
         } else {
             System.out.println("The lemma doesn't appear in the corpus");

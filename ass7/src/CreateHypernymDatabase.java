@@ -1,4 +1,12 @@
+/**
+ * The type Create hypernym database.
+ */
 public class CreateHypernymDatabase {
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         if (args.length == 2) {
             HypernymDatabaseManager hypernymDatabaseManager = new HypernymDatabaseManager();

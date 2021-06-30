@@ -1,7 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Sentence processor.
+ */
 public class SentenceProcessor {
+    /**
+     * Process the sentence.
+     *
+     * @param sentence the sentence to process
+     * @return the list of hypernyms extracted from the sentence
+     */
     public static List<Hypernym> process(String sentence) {
         List<Hypernym> hypernyms = new ArrayList<Hypernym>();
         List<TextFragment> fragments = splitIntoFragments(sentence);
@@ -16,6 +25,13 @@ public class SentenceProcessor {
         return hypernyms;
     }
 
+    /**
+     * Split the sentence into fragments. Each fragment is either a noun phrase or a text
+     * between the noun phrases.
+     *
+     * @param sentence the sentence to split
+     * @return the list of fragments
+     */
     private static List<TextFragment> splitIntoFragments(String sentence) {
         List<TextFragment> fragments = new ArrayList<TextFragment>();
         String remainingText = sentence;
@@ -60,6 +76,13 @@ public class SentenceProcessor {
         return fragments;
     }
 
+    /**
+     * Copmares the strings while ignoring any leading spaces or commas.
+     *
+     * @param mainString the main string
+     * @param searchString a search string
+     * @return true if the strings are equal, false otherwise
+     */
     private static boolean equalsIgnoreLeadingCommasAndSpaces(String mainString, String searchString) {
         boolean equals = false;
         if (mainString.toLowerCase().endsWith(searchString)) {
@@ -75,27 +98,32 @@ public class SentenceProcessor {
         return equals;
     }
 
+    /**
+     * Analyzes the fragments and records the type of each of them.
+     *
+     * @param fragments the list of fragments to analyze
+     */
     private static void analyzeFragments(List<TextFragment> fragments) {
         for (TextFragment fragment : fragments) {
             if (!fragment.isNounPhrase()) {
                 String fragmentText = fragment.getText();
-                if (fragmentText.equals(",") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "and") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "or")) {
+                if (fragmentText.equals(",")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "and")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "or")) {
                     fragment.markAsCommaAndOr(true);
-                } else if (equalsIgnoreLeadingCommasAndSpaces(fragmentText, "such as") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "including") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "especially")) {
+                } else if (equalsIgnoreLeadingCommasAndSpaces(fragmentText, "such as")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "including")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "especially")) {
                     fragment.markAsHyperHypoPatternKeyword(true);
-                } else if (equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is an example of") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is a kind of") ||
-                        equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is a class of")) {
+                } else if (equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is an example of")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is a kind of")
+                        || equalsIgnoreLeadingCommasAndSpaces(fragmentText, "which is a class of")) {
                     fragment.markAsHypoHyperPatternKeyword(true);
                 } else if (fragmentText.toLowerCase().endsWith("such")) {
                     // Unlike with other pattern markers that always appear between noun phrases,
                     // "such" is a special case where we don't test for exact match. Rather, we look
-                    // for any text fragment ending with "such"
+                    // for any text fragments ending with "such"
                     fragment.markAsSplitHyperHypoPatternKeywordPart1(true);
                 } else if (fragmentText.equalsIgnoreCase("as")) {
                     fragment.markAsSplitHyperHypoPatternKeywordPart2(true);
@@ -104,6 +132,12 @@ public class SentenceProcessor {
         }
     }
 
+    /**
+     * Find the first pattern marker among the segments.
+     *
+     * @param fragments the list of fragments
+     * @return the first pattern marker index or -1 if none was found
+     */
     private static int findFirstPatternMarker(List<TextFragment> fragments) {
         int firstPatternMarkerIndex = -1;
         int curIndex = 0;
@@ -129,6 +163,13 @@ public class SentenceProcessor {
         return firstPatternMarkerIndex;
     }
 
+    /**
+     * Finds and processes a pattern in the text represented as a list of fragments.
+     *
+     * @param fragments the list of fragments
+     * @param hypernyms the list to add the hypernym to, if found
+     * @return number of processed fragments
+     */
     private static int findAndProcessPattern(List<TextFragment> fragments, List<Hypernym> hypernyms) {
         int processedFragments = fragments.size();
         int firstPatternMarkerIndex = findFirstPatternMarker(fragments);
@@ -145,6 +186,14 @@ public class SentenceProcessor {
         return processedFragments;
     }
 
+    /**
+     * Processes a pattern of the type where the hypernym appears first, then the keyword, then the hyponyms.
+     *
+     * @param fragments the list of fragments making up the pattern
+     * @param patternMarkerIndex the index of the fragment containing the pattern keyword
+     * @param hypernyms the list to add the hypernym to, after it's created
+     * @return number of processed fragments
+     */
     private static int processHyperHypoPattern(List<TextFragment> fragments, int patternMarkerIndex,
                                                List<Hypernym> hypernyms) {
         int processedFragments = fragments.size();
@@ -181,6 +230,14 @@ public class SentenceProcessor {
         return processedFragments;
     }
 
+    /**
+     * Processes a pattern of the type where the hyponym appears first, then the keyword, then the hypernym.
+     *
+     * @param fragments the list of fragments making up the pattern
+     * @param patternMarkerIndex the index of the fragment containing the pattern keyword
+     * @param hypernyms the list to add the hypernym to, after it's created
+     * @return number of processed fragments
+     */
     private static int processHypoHyperPattern(List<TextFragment> fragments, int patternMarkerIndex,
                                                List<Hypernym> hypernyms) {
         int processedFragments = fragments.size();
@@ -206,6 +263,15 @@ public class SentenceProcessor {
         return processedFragments;
     }
 
+    /**
+     * Processes a pattern of the type where the first keyword appears at the beginning of
+     * the pattern followed by the hypernym, a second keyword and, finally, the hyponyms.
+     *
+     * @param fragments the list of fragments making up the pattern
+     * @param patternMarkerIndex the index of the fragment containing the first pattern keyword
+     * @param hypernyms the list to add the hypernym to, after it's created
+     * @return number of processed fragments
+     */
     private static int processSplitHyperHypoPattern(List<TextFragment> fragments, int patternMarkerIndex,
                                                     List<Hypernym> hypernyms) {
         int processedFragments = fragments.size();
