@@ -1,13 +1,14 @@
+package hypernymdb;
 
 /**
- * The type Hyponym.
+ * The type hypernymdb.Hyponym.
  */
 public class Hyponym implements Comparable<Hyponym> {
     private String hyponym;
     private int numOccurences;
 
     /**
-     * Instantiates a new Hyponym.
+     * Instantiates a new hypernymdb.Hyponym.
      *
      * @param name the hypnym name
      */

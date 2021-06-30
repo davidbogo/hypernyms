@@ -1,9 +1,11 @@
+package hypernymdb;
+
 /**
  * The type Extended hypernym.
  */
 public class ExtendedHypernym implements Comparable<ExtendedHypernym> {
     /**
-     * The Hypernym.
+     * The hypernymdb.Hypernym.
      */
     private Hypernym hypernym;
     /**

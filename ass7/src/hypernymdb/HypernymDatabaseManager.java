@@ -1,3 +1,7 @@
+package hypernymdb;
+
+import patterndetector.SentenceProcessor;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -9,14 +13,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * The type Hypernym database manager.
+ * The type hypernymdb.Hypernym database manager.
  */
 public class HypernymDatabaseManager {
     private List<Hypernym>       hypernyms;
-    private SentenceProcessor    sentenceProcessor;
+    private SentenceProcessor sentenceProcessor;
 
     /**
-     * Instantiates a new Hypernym database manager.
+     * Instantiates a new hypernymdb.Hypernym database manager.
      */
     public HypernymDatabaseManager() {
         hypernyms = new ArrayList<Hypernym>();

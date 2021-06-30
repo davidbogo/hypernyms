@@ -1,3 +1,8 @@
+package patterndetector;
+
+import hypernymdb.Hypernym;
+import hypernymdb.Hyponym;
+
 import java.util.ArrayList;
 import java.util.List;
 

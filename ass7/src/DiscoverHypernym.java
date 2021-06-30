@@ -1,3 +1,5 @@
+import hypernymdb.HypernymDatabaseManager;
+
 /**
  * The type Discover hypernym.
  */

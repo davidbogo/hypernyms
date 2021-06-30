@@ -1,3 +1,5 @@
+package hypernymdb;
+
 import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -5,14 +7,14 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The type Hypernym.
+ * The type hypernymdb.Hypernym.
  */
 public class Hypernym implements Comparable<Hypernym> {
     private String hypernym;
     private List<Hyponym> hyponyms;
 
     /**
-     * Instantiates a new Hypernym.
+     * Instantiates a new hypernymdb.Hypernym.
      *
      * @param name the name
      */
