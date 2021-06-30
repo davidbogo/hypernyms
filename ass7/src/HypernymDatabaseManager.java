@@ -66,18 +66,11 @@ public class HypernymDatabaseManager {
         while ((line = bufReader.readLine()) != null) {
             if (line.length() > 1) {
                 List<Hypernym> tempHypernyms;
-                if (line.contains(".")) {
-                    String[] sentenceArray = pattern.split(line);
-                    for (String sentence : sentenceArray) {
-                        tempHypernyms = sentenceProcessor.process(sentence);
-                        if (tempHypernyms != null) {
-                            registerHypernyms(tempHypernyms);
-                        }
-                    }
-                } else {
-                    hypernyms = sentenceProcessor.process(line);
-                    if (hypernyms != null) {
-                        registerHypernyms(hypernyms);
+                String[] sentenceArray = pattern.split(line);
+                for (String sentence : sentenceArray) {
+                    tempHypernyms = sentenceProcessor.process(sentence);
+                    if (tempHypernyms != null) {
+                        registerHypernyms(tempHypernyms);
                     }
                 }
             }
