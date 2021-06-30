@@ -61,7 +61,7 @@ public class HypernymDatabaseManager {
      * @throws Exception if something goes wrong
      */
     private void readSingleCorpusFile(BufferedReader bufReader) throws Exception {
-        Pattern pattern = Pattern.compile("\\.");
+        Pattern pattern = Pattern.compile("\\.|\\?|!");
         String line;
         while ((line = bufReader.readLine()) != null) {
             if (line.length() > 1) {
